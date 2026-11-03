@@ -19,4 +19,39 @@ do
     )
 
     echo "instance id: $instance_id"
+
+    if [ $instance != "fontend" ]; then
+        IP=$( aws ec2 describe-instances \
+               --instance-ids $instance_id \
+               --query "Reservations[].Instances[].PublicIpAddress]" \
+               --output text  
+        )
+        r53_record = "$instance.$domain_name"
+   else
+     IP=$( aws ec2 describe-instances \
+               --instance-ids $instance_id \
+               --query "Reservations[].Instances[].PrivateIpAddress]" \
+               --output text  
+        ) 
+        r53_record = "$domain_name"    
+   fi
+   
+   #update route_53 Record
+
+     aws route53 change-resource-record-sets \
+    --hosted-zone-id $hosted_zone_id \
+    --change-batch '{
+        "Changes": [
+            {
+                "Action": "UPSERT",
+                "ResourceRecordSet": {
+                    "Name": "$r53_record",
+                    "Type": "A",
+                    "TTL": 1,
+                    "ResourceRecords": [{"Value": "IP=$"}]
+                }
+            }
+        ]
+    }'
+
 done
