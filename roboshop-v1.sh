@@ -18,7 +18,7 @@ do
           --output text
     )
 
-    echo "instance id: $instance_id"
+    echo "$instance instance id: $instance_id"
 
     if [ $instance != "fontend" ]; then
         IP=$( aws ec2 describe-instances \
@@ -26,14 +26,14 @@ do
                --query "Reservations[].Instances[].PublicIpAddress]" \
                --output text  
         )
-        r53_record = "$instance.$domain_name"
+        r53_record="$instance.$domain_name"   #avoid spaces for var
    else
      IP=$( aws ec2 describe-instances \
                --instance-ids $instance_id \
                --query "Reservations[].Instances[].PrivateIpAddress]" \
                --output text  
         ) 
-        r53_record = "$domain_name"    
+        r53_record="$domain_name"    
    fi
    
    #update route_53 Record
@@ -45,13 +45,14 @@ do
             {
                 "Action": "UPSERT",
                 "ResourceRecordSet": {
-                    "Name": "$r53_record",
+                    "Name": "'$r53_record'",
                     "Type": "A",
                     "TTL": 1,
-                    "ResourceRecords": [{"Value": "IP=$"}]
+                    "ResourceRecords": [{"Value": "'$IP'"}]
                 }
             }
         ]
     }'
-
+    
+    echo "updated r53 record for $instance"
 done
