@@ -21,22 +21,21 @@ do
     echo "$instance instance id: $instance_id"
 
     if [ $instance != "fontend" ]; then
-        IP=$( aws ec2 describe-instances \
-               --instance-ids $instance_id \
-               --query 'Reservations[].Instances[].PrivateIpAddress]' --output text  
+        IP=$( aws ec2 describe-instances --instance-ids $instance_id \
+               --query 'Reservations[].Instances[].PrivateIpAddress' --output text  
         )
-        r53_record="$instance.$domain_name"   #avoid spaces for var
+        r53_record="${instance}.${domain_name}"   #avoid spaces for var
    else
      IP=$( aws ec2 describe-instances \
                --instance-ids $instance_id \
-               --query 'Reservations[].Instances[].PrivateIpAddress]' --output text  
+               --query 'Reservations[].Instances[].PrivateIpAddress' --output text  
         ) 
         r53_record="$domain_name"    
    fi
    
    #update route_53 Record
 
-   echo "Record: ${r53_record}"
+    echo "Record: ${r53_record}"
 
     aws route53 change-resource-record-sets \
     --hosted-zone-id $hosted_zone_id \
