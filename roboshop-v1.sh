@@ -36,9 +36,9 @@ do
    
    #update route_53 Record
 
-     echo "Record: ${r53_record}"
+   echo "Record: ${r53_record}"
 
-     aws route53 change-resource-record-sets \
+    aws route53 change-resource-record-sets \
     --hosted-zone-id $hosted_zone_id \
     --change-batch '{
         "Changes": [
