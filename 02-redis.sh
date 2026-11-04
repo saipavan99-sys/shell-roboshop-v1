@@ -54,4 +54,10 @@ validate $? "start and enable Redis"
 echo  "$(timestamp) [INFO] Script completed in $SECONDS seconds"
 echo  "$(timestamp) [INFO] ===== script completed execution =====" | tee -a $log_file
 
+#checking
+systemctl status redis &>> log_file
+ss -lntp | grep 6379 &>> log_file
+redis-cli ping &>> log_file
+validate $? "checking Status"
+
 
