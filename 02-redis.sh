@@ -33,7 +33,7 @@ validate(){
 }
 
 #Starting Time
-echo  "$(timestamp) [INFO] ===== script started time =====" tee -a $log_file
+echo  "$(timestamp) [INFO] ===== script started time =====" | tee -a $log_file
 
 #installing redis
 dnf module disable redis -y &>> log_file
