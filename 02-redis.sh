@@ -33,7 +33,7 @@ validate(){
 }
 
 #Starting Time
-echo  "$(timestamp) [INFO] ===== script started time =====" | tee -a $log_file
+echo  "$(timestamp) [INFO] ===== script started Execution =====" | tee -a $log_file
 
 #installing redis
 dnf module disable redis -y &>> log_file
@@ -49,5 +49,9 @@ validate $? "Allowing remort connections to Redis"
 systemctl enable redis &>> log_file
 systemctl start redis
 validate $? "start and enable Redis"
+
+#End Time
+echo  "$(timestamp) [INFO] Script completed in $SECONDS seconds"
+echo  "$(timestamp) [INFO] ===== script completed execution =====" | tee -a $log_file
 
 
