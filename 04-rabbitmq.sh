@@ -51,7 +51,7 @@ validate $? "start and enable RabbitMQ server"
 #creating RabbitMQ user
 rabbitmqctl add_user roboshop roboshop123 &>> $log_file
 rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*" &>> $log_file
-validate $? "Creating RabbitMQ user fot roboshop"
+validate $? "Creating RabbitMQ user for roboshop"
 
 
 
