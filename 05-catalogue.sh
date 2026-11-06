@@ -72,7 +72,7 @@ npm install
 validate $? "Install dependencies"
 
 #updating catalogue.service
-sed -i "s/DOMAIN_NAME/$domain_name" "$script_dir/catalogue.service"
+sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/catalogue.service"
 cp "$script_dir/catalogue.service" /etc/systemd/system/catalogue.service
 
 
@@ -82,7 +82,26 @@ systemctl start catalogue &>> $log_file
 validate $? "Start and enable catalogue"
 
 #installing MongoDB client
+dnf install mongodb-mongosh -y &>> $log_file
+validate $? "Installing MongoDB Client"
 
+product_count=$(mongosh --host mongodb.$domain_name --quiet --eval 'db.getSiblingDB("catalogue").products.countDocuments()' 2>> $log_file)
+validate $? "Connecting to MongoDB"
+if [ $product_count -eq 0 ]; then          #0 means No data or products
+    mongosh --host "mongodb.$domain_name" </app/db/master-data.js &>> $log_file
+    validate $? "Loading products"
+else
+   echo "$(timestamp) [INFO] Products already loaded....${Y}SKIPPING${N}"
+fi
+
+systemctl restart catalogue
+validate $? "restarting catalogue"
+
+#Health checking
+systemctl status catalogue
+journalctl -u catalogue -f
+curl http://localhost:8080/health
+curl http://localhost:8080/products
 
 #End Time
 echo  "$(timestamp) [INFO] Script completed in $SECONDS seconds"
