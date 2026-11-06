@@ -1,0 +1,91 @@
+#!/bin/bash
+
+log_folder="/var/log/roboshop"
+log_file="${log_folder}/${0}.log"
+domain_name="saipavan.store"
+script_dir=$(dirname "$(realpath "$0")")
+R="\e[31m"  #adding colours to specific words
+G="\e[32m"
+Y="\e[33m"
+N="\e[0m"   
+
+user_id=$(id -u)
+
+if [ $user_id -ne 0 ]; then
+  echo "please run this script with sudo access"
+  exit 1
+fi
+
+mkdir -p $log_folder                                                  #creating log_folder if not
+
+#Adding time stamp
+timestamp(){
+    date "+%F %T"
+}
+
+#function
+
+validate(){
+     if [ $1 -ne 0 ]; then
+        echo -e "$(timestamp) [ERROR] $2 is ${R}FAILED....${N}" | tee -a $log_file         #to print status on screen use tee cmd
+        exit 1                                                                             #exit status
+    else 
+        echo -e "$(timestamp) [INFO] $2 is ${G}SUCCESS....${N}" | tee -a $log_file        # "-e" is to execute colours
+    fi
+}
+
+#Starting Time
+echo  "$(timestamp) [INFO] ===== script started Execution =====" | tee -a $log_file
+
+#Installing nodejs 24
+dnf module disable nodejs -y &>> $log_file
+dnf module enable nodejs:24 -y &>> $log_file
+dnf install nodejs -y &>> $log_file
+validate $? "Installing nodejs 24"
+
+#Create system user
+id roboshop &>> $log_file  #checking syatem user
+if [ $? -ne 0 ]; then
+   useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>> $log_file
+   validate $? "creating system user"
+else
+   echo -e "$(timestamp) [INFO] System user already exists....${Y}SKIPPING${N}"
+fi
+
+#create app directory (-p if exists not create )
+rm -rf /app
+validate $? "Removing old code"
+
+mkdir -p /app
+validate $? "Creating app directory"
+
+#Download application
+curl -L -o /tmp/cart.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/cart-v4.zip &>> $log_file
+validate $? "Downloading cart"
+
+cd /app
+unzip /tmp/cart.zip &>> $log_file
+validate $? "Unzip cart"
+
+#Install Dependences
+npm install &>> $log_file
+validate $? "Install dependencies"
+
+#updating catalogue.service
+sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/cart.service"
+cp "$script_dir/cart.service" /etc/systemd/system/cart.service 
+
+
+systemctl daemon-reload &>> $log_file
+systemctl enable cart &>> $log_file
+systemctl start cart &>> $log_file
+validate $? "Start and enable cart"
+
+
+
+systemctl restart cart
+validate $? "Restarting cart"
+
+#End Time
+echo  "$(timestamp) [INFO] Script completed in $SECONDS seconds"
+echo  "$(timestamp) [INFO] ===== script completed execution =====" | tee -a $log_file
