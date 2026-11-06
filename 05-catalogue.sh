@@ -103,10 +103,10 @@ systemctl restart catalogue
 validate $? "restarting catalogue"
 
 #Health checking
-systemctl status catalogue
-journalctl -u catalogue -f
-curl http://localhost:8080/health
-curl http://localhost:8080/products
+#systemctl status catalogue
+#journalctl -u catalogue -f
+#curl http://localhost:8080/health
+#curl http://localhost:8080/products
 
 #End Time
 echo  "$(timestamp) [INFO] Script completed in $SECONDS seconds"
