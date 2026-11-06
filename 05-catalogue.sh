@@ -96,7 +96,7 @@ if [ "$product_count" -eq 0 ]; then          #0 means No data or products
     mongosh --host "mongodb.$domain_name" </app/db/master-data.js &>> $log_file
     validate $? "Loading products"
 else
-   echo "$(timestamp) [INFO] Products already loaded....${Y}SKIPPING${N}"
+   echo -e "$(timestamp) [INFO] Products already loaded....${Y}SKIPPING${N}"
 fi
 
 systemctl restart catalogue
