@@ -60,20 +60,20 @@ mkdir -p /app
 validate $? "Creating app directory"
 
 #Download application
-curl -L -o /tmp/catalogue.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/catalogue-v4.zip
+curl -L -o /tmp/catalogue.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/catalogue-v4.zip &>> $log_file
 validate $? "Downloading catalogue"
 
 cd /app
-unzip /tmp/catalogue.zip
+unzip /tmp/catalogue.zip &>> $log_file
 validate $? "Unzip catalogue"
 
 #Install Dependences
-npm install
+npm install &>> $log_file
 validate $? "Install dependencies"
 
 #updating catalogue.service
-sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/catalogue.service"
-cp "$script_dir/catalogue.service" /etc/systemd/system/catalogue.service
+sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/catalogue.service" &>> $log_file
+cp "$script_dir/catalogue.service" /etc/systemd/system/catalogue.service &>> $log_file
 
 
 systemctl daemon-reload &>> $log_file
