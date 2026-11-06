@@ -72,8 +72,8 @@ npm install &>> $log_file
 validate $? "Install dependencies"
 
 #updating catalogue.service
-sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/catalogue.service" &>> $log_file
-cp "$script_dir/catalogue.service" /etc/systemd/system/catalogue.service &>> $log_file
+sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/catalogue.service"
+cp "$script_dir/catalogue.service" /etc/systemd/system/catalogue.service 
 
 
 systemctl daemon-reload &>> $log_file
