@@ -50,14 +50,16 @@ systemctl enable redis &>> log_file
 systemctl start redis
 validate $? "start and enable Redis"
 
-#End Time
-echo  "$(timestamp) [INFO] Script completed in $SECONDS seconds"
-echo  "$(timestamp) [INFO] ===== script completed execution =====" | tee -a $log_file
-
 #checking
 systemctl status redis &>> log_file
 ss -lntp | grep 6379 &>> log_file
 redis-cli ping &>> log_file
 validate $? "checking Status"
+
+#End Time
+echo  "$(timestamp) [INFO] Script completed in $SECONDS seconds"
+echo  "$(timestamp) [INFO] ===== script completed execution =====" | tee -a $log_file
+
+
 
 
