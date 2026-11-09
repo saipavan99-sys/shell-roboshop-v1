@@ -61,7 +61,7 @@ validate $? "Downloding and unziping frontend code"
 #updating roboshop.cong file
 sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/roboshop.conf" &>> $log_file
 cp "$script_dir/roboshop.conf" /etc/nginx/default.d/roboshop.conf &>> $log_file
-validate $? "Copied roboshop.config"
+validate $? "Copied roboshop.conf"
 
 #nginx config
 nginx -t &>> $log_file
