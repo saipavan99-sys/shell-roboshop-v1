@@ -59,8 +59,8 @@ unzip /tmp/frontend.zip &>> $log_file
 validate $? "Downloding and unziping frontend code"
 
 #updating roboshop.cong file
-sed -i "s/DOMAIN_NAME/$domain_name/g" "$scripts_dir/roboshop.conf" &>> $log_file
-cp "$scripts_dir/roboshop.conf" /etc/nginx/default.d/roboshop.conf &>> $log_file
+sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/roboshop.conf" &>> $log_file
+cp "$script_dir/roboshop.conf" /etc/nginx/default.d/roboshop.conf &>> $log_file
 validate $? "Copied roboshop.config"
 
 #nginx config
