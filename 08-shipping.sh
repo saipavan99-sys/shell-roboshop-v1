@@ -70,7 +70,7 @@ mkdir -p /app
 validate $? "Creating app directory"
 
 #Download application
-curl -L -o /tmp/shipping.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/cart-v4.zip &>> $log_file
+curl -L -o /tmp/shipping.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/shipping-v4.zip &>> $log_file
 validate $? "Downloading shipping"
 
 cd /app
@@ -91,7 +91,7 @@ sed -i "s/DOMAIN_NAME/$domain_name/g" "$scripts_dir/shipping.service"
 cp "$scripts_dir/shipping.service" /etc/systemd/system/shipping.service
 
 #installing mysql client
-dnf install mysql -y
+dnf install mysql -y &>> $log_file
 validate $? "Installing mysql client"
 
 #loading master data
@@ -104,13 +104,13 @@ else
 fi
 
 #Creating APP user
-mysql -h "mysql.$domain_name" -uroot -pRoboShop@1 < /app/db/app-user.sql
+mysql -h "mysql.$domain_name" -uroot -pRoboShop@1 < /app/db/app-user.sql &>> $log_file
 validate $? "Creating APP user"
 
 #Restarting/Starting shipping
 systemctl daemon-reload &>> $logs_file
 systemctl enable shipping &>> $logs_file
-systemctl restart shipping
+systemctl restart shipping &>> $log_file
 validate $? "Restarting/Starting shipping"
 
 

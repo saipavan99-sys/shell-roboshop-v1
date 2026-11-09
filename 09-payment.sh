@@ -58,7 +58,7 @@ mkdir -p /app
 validate $? "Creating app directory"
 
 #Download application
-curl -L -o /tmp/payment.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/cart-v4.zip &>> $log_file
+curl -L -o /tmp/payment.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/payment-v4.zip &>> $log_file
 validate $? "Downloading payment"
 
 cd /app
