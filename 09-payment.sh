@@ -81,3 +81,7 @@ systemctl daemon-reload
 systemctl enable payment
 systemctl start payment
 validate $? "Enable and start payment"
+
+###### End_Time #########
+echo  "$(timestamp) [INFO] Script completed in $SECONDS seconds"
+echo  "$(timestamp) [INFO] ===== script completed execution =====" | tee -a $log_file
