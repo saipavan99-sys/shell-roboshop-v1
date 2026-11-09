@@ -74,8 +74,8 @@ validate $? "Creating virtual environment"
 validate $? "Installing dependencies"
 
 #updating payment.servicce file
-sed -i "s/DOMAIN_NAME/$domain_name/g" "$scripts_dir/payment.service"
-cp "$scripts_dir/shipping.service" /etc/systemd/system/payment.service
+sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/payment.service"
+cp "$script_dir/shipping.service" /etc/systemd/system/payment.service
 
 
 systemctl daemon-reload &>> $log_file

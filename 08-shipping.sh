@@ -87,15 +87,15 @@ mv target/shipping.jar shipping.jar
 validate $? "Moving shipping.jar file"
 
 #updating shipping.servicce file
-sed -i "s/DOMAIN_NAME/$domain_name/g" "$scripts_dir/shipping.service"
-cp "$scripts_dir/shipping.service" /etc/systemd/system/shipping.service
+sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/shipping.service"
+cp "$script_dir/shipping.service" /etc/systemd/system/shipping.service
 
 #installing mysql client
 dnf install mysql -y &>> $log_file
 validate $? "Installing mysql client"
 
 #loading master data
-count=$(mysql -h "mysql.$domain_name" -u root -pRoboShop@1 -N -B -e "SELECT COUNT(*) FROM cities.cities;" 2>> $logs_file )
+count=$(mysql -h "mysql.$domain_name" -u root -pRoboShop@1 -N -B -e "SELECT COUNT(*) FROM cities.cities;" 2>> $log_file )
 if [ -z "$count" ] || [ "$count" -eq 0 ]; then
     mysql -h "mysql.$domain_name" -uroot -pRoboShop@1 < /app/db/master-data.sql
     validate $? "Loading shipping data"
@@ -108,8 +108,8 @@ mysql -h "mysql.$domain_name" -uroot -pRoboShop@1 < /app/db/app-user.sql &>> $lo
 validate $? "Creating APP user"
 
 #Restarting/Starting shipping
-systemctl daemon-reload &>> $logs_file
-systemctl enable shipping &>> $logs_file
+systemctl daemon-reload &>> $log_file
+systemctl enable shipping &>> $log_file
 systemctl restart shipping &>> $log_file
 validate $? "Restarting/Starting shipping"
 
