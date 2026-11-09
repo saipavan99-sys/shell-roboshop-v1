@@ -66,10 +66,10 @@ unzip /tmp/payment.zip &>> $log_file
 validate $? "Unzip payment"
 
 #Installing dependencies
-python3.14 -m venv /app/.venv
+python3.14 -m venv /app/.venv &>> $log_file
 validate $? "Creating virtual environment"
 
-/app/.venv/bin/pip install -r requirements.txt
+/app/.venv/bin/pip install -r requirements.txt &>> $log_file
 validate $? "Installing dependencies"
 
 #updating payment.servicce file
@@ -77,9 +77,9 @@ sed -i "s/DOMAIN_NAME/$domain_name/g" "$scripts_dir/payment.service"
 cp "$scripts_dir/shipping.service" /etc/systemd/system/payment.service
 
 
-systemctl daemon-reload
-systemctl enable payment
-systemctl start payment
+systemctl daemon-reload &>> $log_file
+systemctl enable payment &>> $log_file
+systemctl start payment &>> $log_file
 validate $? "Enable and start payment"
 
 ###### End_Time #########
