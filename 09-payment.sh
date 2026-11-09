@@ -69,6 +69,7 @@ validate $? "Unzip payment"
 python3.14 -m venv /app/.venv &>> $log_file
 validate $? "Creating virtual environment"
 
+
 /app/.venv/bin/pip install -r requirements.txt &>> $log_file
 validate $? "Installing dependencies"
 

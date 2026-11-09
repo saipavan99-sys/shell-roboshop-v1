@@ -78,7 +78,8 @@ unzip /tmp/shipping.zip &>> $log_file
 validate $? "Unzip shipping"
 
 #Installing dependencies
-mvn clean package &>> $logs_file
+cd /app
+mvn clean package &>> $log_file
 validate $? "Installing dependencies"
 
 #Moving shipping.jar file
